@@ -14,7 +14,7 @@ public class BoardConsoleRender {
              String line = "";
              for(File file : File.values()){
                 Coordinates coordinates = new Coordinates (file, rank);
-                if (board.isSquareEmply(coordinates)){
+                if (board.isSquareEmpty(coordinates)){
                     line += getSpriteForEmptySquare(new Coordinates(file, rank));
                 } else{
                     line += getPieceSprite(board.getPiece(coordinates));
