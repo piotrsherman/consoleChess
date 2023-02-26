@@ -4,6 +4,8 @@ import chess.piece.Piece;
 
 import java.util.Set;
 
+import static java.util.Collections.emptySet;
+
 public class BoardConsoleRender {
 
     public static final String ANSI_RESET = "\u001B";
@@ -13,7 +15,11 @@ public class BoardConsoleRender {
     public static final String ANSI_BLACK_SQUARE_BACKGROUND = "\u001B[0;100m";
     public static final String ANSI_HIGHLIGHTED_SQUARE_BACKGROUND = "u\001B[47m";
      public void render(Board board, Piece pieceToMove){
-         Set<Coordinates> availableMoveSquares = pieceToMove.getAvailibleMoveSquares(board);
+         Set<Coordinates> availableMoveSquares = emptySet();
+         if(pieceToMove != null){
+            availableMoveSquares = pieceToMove.getAvailibleMoveSquares(board);
+         }
+
          for(int rank = 8; rank >= 1; rank--){
              String line = "";
              for(File file : File.values()){
@@ -29,6 +35,10 @@ public class BoardConsoleRender {
              line += ANSI_RESET;
              System.out.println(line);
          }
+     }
+
+     public void render(Board board){
+         render(board, null);
      }
 
      private String colorizeSprite(String sprite, Color pieceColor, boolean isSquareDark, boolean isHighlighted){
