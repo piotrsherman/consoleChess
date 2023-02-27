@@ -1,5 +1,9 @@
-package chess;
+package chess.board;
 
+import chess.Color;
+import chess.Coordinates;
+import chess.File;
+import chess.board.Board;
 import chess.piece.Piece;
 
 import java.util.Set;

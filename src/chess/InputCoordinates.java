@@ -1,5 +1,10 @@
 package chess;
 
+import chess.board.Board;
+import chess.board.BoardConsoleRender;
+import chess.board.BoardFactory;
+import chess.board.Move;
+import chess.piece.King;
 import chess.piece.Piece;
 
 import java.util.Scanner;
@@ -88,11 +93,40 @@ public class InputCoordinates {
             return input;
         }
     }
-    public static void main(String[] args){
-        Board board = new Board();
-        board.setupDefaultPiecesPositions();
 
-        Coordinates coordinates = inputPieceCoordinatesForColor(Color.WHITE, board);
-        System.out.println(coordinates);
+    public static Move inputMove(Board board, Color color, BoardConsoleRender renderer){
+        while(true){
+            //input
+            Coordinates sourceCoordinates = InputCoordinates.inputPieceCoordinatesForColor(
+                    color, board);
+
+            Piece piece = board.getPiece(sourceCoordinates);
+            Set<Coordinates> availableMoveSquares = piece.getAvailibleMoveSquares(board);
+
+            renderer.render(board, piece);
+            Coordinates targetCoordinates = InputCoordinates.inputAvailableSquare(availableMoveSquares);
+
+            Move move = new Move(sourceCoordinates, targetCoordinates);
+
+            if(validateIfKingInCheckAfterMove(board, color, move)){
+                System.out.println("Your king is under attack!");
+                continue;
+            }
+            return move;
+        }
+
+
+    }
+
+    private static boolean validateIfKingInCheckAfterMove(Board board, Color color, Move move) {
+        Board copy = (new BoardFactory()).copy(board);
+        copy.makeMove(move);
+
+        //we trust that there id king on the board
+        Piece king = copy.getPiecesByColor(color).stream().filter(piece -> piece instanceof King).findFirst().get();
+        return copy.isSquareAttackedByColor(king.coordinates, color.opposite());
+        //King king =...
+        //king.coordinates under attack => false;
+        //return true
     }
 }

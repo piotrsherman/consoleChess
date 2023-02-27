@@ -1,9 +1,8 @@
 package chess;
 
-import chess.piece.BoardFactory;
- import chess.piece.Piece;
-
-import java.util.Set;
+import chess.board.Board;
+import chess.board.BoardConsoleRender;
+import chess.board.BoardFactory;
 
 public class Main {
     public static void main(String[] args){

@@ -2,5 +2,9 @@ package chess;
 
 public enum Color {
     BLACK,
-    WHITE
+    WHITE;
+
+    public Color opposite(){
+        return this == WHITE ? BLACK : WHITE;
+    }
 }

@@ -1,11 +1,24 @@
-package chess;
+package chess.board;
 
+import chess.Color;
+import chess.Coordinates;
+import chess.File;
 import chess.piece.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class Board {
-    HashMap<Coordinates, Piece> pieces = new HashMap<>();
+    public final String startingFen;
+    public HashMap<Coordinates, Piece> pieces = new HashMap<>();
+
+    public List<Move> moves = new ArrayList<>();
+
+    public Board(String startingFen) {
+        this.startingFen = startingFen;
+    }
 
     public void setPiece(Coordinates coordinates, Piece piece) {
         piece.coordinates = coordinates;
@@ -14,6 +27,15 @@ public class Board {
 
     public void removePiece(Coordinates coordinates){
         pieces.remove(coordinates);
+    }
+
+    public void makeMove(Move move){
+        Piece piece = getPiece(move.from);
+
+        removePiece(move.from);
+        setPiece(move.to, piece);
+
+        moves.add(move);
     }
 
     public void movePiece(Coordinates from, Coordinates to){
@@ -68,4 +90,30 @@ public class Board {
     public static boolean isSqareDark(Coordinates coordinates){
         return(((coordinates.file.ordinal() + 1) + coordinates.rank) % 2) == 0;
     }
+
+    public List<Piece> getPiecesByColor(Color color) {
+        List<Piece> result = new ArrayList<>();
+
+        for(Piece piece : pieces.values()){
+            if(piece.color == color){
+                result.add(piece);
+            }
+        }
+        return result;
+    }
+
+    public boolean isSquareAttackedByColor(Coordinates coordinates, Color color) {
+        List<Piece> pieces = getPiecesByColor(color);
+
+        for(Piece piece : pieces){
+            Set<Coordinates> attackedSquares = piece.getAttackedSquares(this);
+
+            if(attackedSquares.contains(coordinates)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
